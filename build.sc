@@ -49,15 +49,10 @@ trait HasChisel3 extends ScalaModule {
   override def ivyDeps = Agg(
     ivy"edu.berkeley.cs::chisel3:3.5.0-RC1"
   )
-  //override def scalacPluginIvyDeps = Agg(ivy"edu.berkeley.cs:::chisel3-plugin:3.5.0")
+
 }
 
-//SbtModule基本上与普通的 ScalaModule 相同，但被配置为遵循 SBT 项目布局:
-/*src
-    main/scala
-    test/scala  */
-//CrossSbtModule 是使用 SBT 项目布局配置的 CrossScalaModule 版本:
-//Mill 提供了一个 CrossScalaModule 模板，可以与 Cross 一起跨不同版本的 Scala 交叉构建 Scala 模块。
+
 trait HasChiselTests extends CrossSbtModule  {
   object test extends Tests {
     override def ivyDeps = Agg(ivy"org.scalatest::scalatest:3.0.4", ivy"edu.berkeley.cs::chisel-iotesters:1.2+")
@@ -112,14 +107,11 @@ object rocketchip extends `rocket-chip`.common.CommonRocketChip {
 }
 
 
-object chiselModule extends CrossSbtModule with CommonModule with HasChisel3 with HasChiselTests with HasXsource211{
+object exp extends CrossSbtModule with CommonModule with HasChisel3 with HasChiselTests with HasXsource211{
 
   def crossScalaVersion = "2.12.13"
   override def scalaVersion = "2.12.13"
 
-  //override def compileIvyDeps = Agg(ivys.macroParadise)
-  //override def scalacPluginIvyDeps = Agg(ivys.chisel3Plugin, ivys.macroParadise)
-  //def chisel3PluginIvyDeps = Agg(ivys.chisel3Plugin, ivys.macroParadise)
 
   def rocketModule = rocketchip
 
