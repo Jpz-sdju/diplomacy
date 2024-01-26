@@ -3,29 +3,33 @@ package threenode
 import freechips.rocketchip.tilelink.TLMasterPortParameters
 import chipsalliance.rocketchip.config._
 import freechips.rocketchip.tilelink.TLMasterParameters
+import freechips.rocketchip.diplomacy._
+import freechips.rocketchip.tilelink.TLClientNode
+import chisel3._
+import chisel3.util._
 
-class IUnCache()(implicit p: Parameters) extends LazyModule {
 
-  val clientParameuers = TLMasterPortParameters.v1(
+class myClient()(implicit p: Parameters) extends LazyModule {
+
+  val clientParameters = TLMasterPortParameters.v1(
     clients = Seq(
       TLMasterParameters.v1(
-        "Iuncache",
+        "myClient",
         sourceId = IdRange(0, 1 << 1)
       )
     )
   )
   val clientNode = TLClientNode(Seq(clientParameters))
 
-  lazy val module = new IUncacheImp(this)
+  lazy val module = new myClientImp(this)
 }
 
-class IUncacheImp(wo: IUnCache) extends LazyModuleImp(wo) {
+class myClientImp(wo: myClient) extends LazyModuleImp(wo) {
   val io = IO {
     new Bundle {
       val ss = Output(UInt(64.W))
 
     }
-
   }
   val cnt = RegInit(0.U(8.W))
   val (bus, edge) = wo.clientNode.out.head
