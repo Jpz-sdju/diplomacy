@@ -1,4 +1,4 @@
-package codes
+package timer2iuncache
 
 import chisel3._
 import chisel3.util._
@@ -43,7 +43,7 @@ class IUncacheImp(wo: IUnCache) extends LazyModuleImp(wo) {
   }
   val load = edge.Get(
     fromSource      = 3.U,
-    toAddress       = Mux(cnt(0),3.U,4.U),
+    toAddress       = 3.U,
     lgSize          = 3.U
   )._2
 
@@ -55,7 +55,7 @@ class IUncacheImp(wo: IUnCache) extends LazyModuleImp(wo) {
     mask            = 3.U
   )._2
 
-  mem_acquire.bits := Mux(cnt(1),load,store)
+  mem_acquire.bits := load
   mem_acquire.valid := Mux(cnt(1),true.B,false.B)
 
 
