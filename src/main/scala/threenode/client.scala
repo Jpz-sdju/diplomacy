@@ -1,10 +1,8 @@
 package threenode
 
-import freechips.rocketchip.tilelink.TLMasterPortParameters
+import freechips.rocketchip.tilelink._
 import chipsalliance.rocketchip.config._
-import freechips.rocketchip.tilelink.TLMasterParameters
 import freechips.rocketchip.diplomacy._
-import freechips.rocketchip.tilelink.TLClientNode
 import chisel3._
 import chisel3.util._
 
