@@ -9,9 +9,9 @@ import chisel3.experimental.SourceInfo
 import freechips.rocketchip.diplomacy._
 
 
-class IntegerReservationStation(implicit p: Parameters) extends LazyModule {
+class IntegerReservationStation (num : Int)(implicit p: Parameters) extends LazyModule {
 
-  private val rsParam = RsParam(567)
+  private val rsParam = RsParam(num)
   val issueNode = new RsIssueNode(rsParam)
 
 
@@ -23,7 +23,6 @@ class IntegerReservationStationImpl(outer:IntegerReservationStation, param:RsPar
 
   val io = IO(new Bundle{
     val redirect = Output(Valid(UInt(2.W)))
-
   })
 
   io.redirect := DontCare
@@ -32,9 +31,14 @@ class IntegerReservationStationImpl(outer:IntegerReservationStation, param:RsPar
 
 object RsIssueNodeImpl extends SimpleNodeImp[RsParam, Seq[UpwardParam], (RsParam, Seq[UpwardParam], Parameters), Vec[IssueBundle]]{
   override def edge(pd: RsParam, pu: Seq[UpwardParam], p: Parameters, sourceInfo: SourceInfo): (RsParam, Seq[UpwardParam], Parameters) = {
-    (pd, pu, p)
+    if(pd.width == 123){
+      (pd, pu.filter(_.width == 666), p)
+    }else{
+      (pd, pu.filter(_.width == 777), p)
+    }
   }
-  override def bundle(e: (RsParam, Seq[UpwardParam], Parameters)): Vec[IssueBundle] = Vec(e._2.length, new IssueBundle())
+  override def bundle(e: (RsParam, Seq[UpwardParam], Parameters)): Vec[IssueBundle] = {
+    Vec(e._2.length, new IssueBundle())}
   override def render(e: (RsParam, Seq[UpwardParam], Parameters)): RenderedEdge = {
     RenderedEdge("#00ff00" + "Issue")
   }

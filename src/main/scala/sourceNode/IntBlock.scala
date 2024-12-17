@@ -17,16 +17,14 @@ class IssueBundle extends Bundle {
   val a = UInt(2.W)
 }
 object ExuBlockIssueNodeImpl
-    extends SimpleNodeImp[Seq[
-      RsParam
-    ], UpwardParam, (RsParam, UpwardParam, Parameters), IssueBundle] {
+    extends SimpleNodeImp[Seq[RsParam ], UpwardParam, (RsParam, UpwardParam, Parameters), IssueBundle] {
   override def edge(
       pd: Seq[RsParam],
       pu: UpwardParam,
       p: Parameters,
       sourceInfo: SourceInfo
   ): (RsParam, UpwardParam, Parameters) = {
-    (RsParam(3), pu, p)
+    (pd.head, pu, p)
   }
   override def bundle(e: (RsParam, UpwardParam, Parameters)): IssueBundle =
     new IssueBundle()
@@ -37,7 +35,7 @@ object ExuBlockIssueNodeImpl
 class ExuBlockIssueNode(implicit valName: ValName)
     extends AdapterNode(ExuBlockIssueNodeImpl)({ p => p }, { p => p })
 
-class IntegerBlock(implicit p: Parameters) extends LazyModule {
+class IntegerBlock()(implicit p: Parameters) extends LazyModule {
 
   val issueNode = new ExuBlockIssueNode()
   val aluMul = Seq(LazyModule(new AluMulComplex(1, 0)))

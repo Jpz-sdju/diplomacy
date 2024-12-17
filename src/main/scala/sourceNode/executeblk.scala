@@ -11,15 +11,17 @@ import freechips.rocketchip.diplomacy._
 
 class ExecuteBlock(implicit p:Parameters) extends LazyModule  {
   
-  val integerReservationStation: IntegerReservationStation = LazyModule(new IntegerReservationStation)
-  val integerReservationStation1: IntegerReservationStation = LazyModule(new IntegerReservationStation)
+  val integerReservationStation: IntegerReservationStation = LazyModule(new IntegerReservationStation(123))
+  val integerReservationStation1: IntegerReservationStation = LazyModule(new IntegerReservationStation(456))
+
+  val regFile = LazyModule(new RegFileTop(2))
+
 
   val integerBlock: IntegerBlock = LazyModule(new IntegerBlock)
   // val integerBlock1: IntegerBlock = LazyModule(new IntegerBlock)
 
   val exuBlocks = Seq(integerBlock )
 
-  val regFile = LazyModule(new RegFileTop(2))
 
 
   regFile.issueNode :*= integerReservationStation.issueNode
@@ -27,12 +29,13 @@ class ExecuteBlock(implicit p:Parameters) extends LazyModule  {
 
 
 
-  for (eb <- exuBlocks) {
-    eb.issueNode :*= regFile.issueNode
-    // println("sep")
-  }
+  // for (eb <- exuBlocks) {
+    exuBlocks.head.issueNode :*= regFile.issueNode
+  // }
 
   lazy val module = new ExecuteBlockImp(this)
+
+
 }
 
 class ExecuteBlockImp(outer:ExecuteBlock) extends LazyModuleImp(outer){
@@ -42,11 +45,14 @@ class ExecuteBlockImp(outer:ExecuteBlock) extends LazyModuleImp(outer){
 
   io.s := 0.U
 
-  val a = outer.integerBlock.module
-  val b = outer.exuBlocks.head.module
-  val c = outer.integerReservationStation.module
+  val ib1 = outer.integerBlock.module
+  // val ib2 = outer.integerBlock1.module
+  val exu = outer.exuBlocks.head.module
+  val rs1 = outer.integerReservationStation.module
+  val rs2 = outer.integerReservationStation1.module
 
 
 
-  dontTouch(a.io)
+  dontTouch(rs1.io)
+  dontTouch(rs2.io)
 }

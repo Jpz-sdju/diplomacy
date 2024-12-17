@@ -10,15 +10,24 @@ import freechips.rocketchip.diplomacy._
 object RegFileNodeInwardImpl extends InwardNodeImp[RsParam,Seq[UpwardParam],(RsParam, Seq[UpwardParam], Parameters),Vec[IssueBundle]]{
 
   override def edgeI(pd: RsParam, pu: Seq[UpwardParam], p: Parameters, sourceInfo: SourceInfo): (RsParam, Seq[UpwardParam], Parameters) = {
-    (pd, pu, p)
+    if(pd.width == 123){
+      (pd, pu.filter(_.width == 666), p)
+    }else{
+      (pd, pu.filter(_.width == 777), p)
+    }
   }
-  override def bundleI(ei: (RsParam, Seq[UpwardParam], Parameters)): Vec[IssueBundle] = Vec(ei._2.length, new IssueBundle())
+  override def bundleI(ei: (RsParam, Seq[UpwardParam], Parameters)): Vec[IssueBundle] = {
+
+    Vec(ei._2.length, new IssueBundle())}
   override def render(e: (RsParam, Seq[UpwardParam], Parameters)): RenderedEdge = RenderedEdge("#0000ff", "Issue")
 }
 object RegFileNodeOutwardImpl extends OutwardNodeImp[Seq[RsParam], UpwardParam, (RsParam, UpwardParam, Parameters), IssueBundle]{
   override def edgeO(pd: Seq[RsParam], pu: UpwardParam, p: Parameters, sourceInfo: SourceInfo): (RsParam, UpwardParam, Parameters) = {
-    println(pd)
-    (pd.head, pu, p)
+    if(pu.width == 666){
+      (pd.filter(_.width == 123).head, pu, p)
+    }else {
+      (pd.filter(_.width == 456).head, pu, p)
+    }
   }
   override def bundleO(eo: (RsParam, UpwardParam, Parameters)): IssueBundle = new IssueBundle()
 }

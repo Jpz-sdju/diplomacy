@@ -58,7 +58,7 @@ class MulExuImpl(outer:MulExu, exuCfg:TestParam)(implicit p:Parameters) extends 
 }
 
 class DivExu(id:Int, complexName:String, val bypassInNum:Int)(implicit p:Parameters) extends BasicExu{
-  private val cfg  = TestParam(777)
+  private val cfg  = TestParam(888)
   val issueNode = new ExuInputNode(cfg)
   lazy val module = new DivExuImpl(this, cfg)
 }
